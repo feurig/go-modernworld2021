@@ -1,6 +1,6 @@
 package main
 
-import "github.com/afagundes/go-modernworld/modernworld"
+import "github.com/feurig/go-modernworld/modernworld"
 
 func main() {
 	modernworld.NewGame().Start()

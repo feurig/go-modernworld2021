@@ -2,7 +2,7 @@ package modernworld
 
 import (
 	tl "github.com/JoelOtter/termloop"
-	"github.com/afagundes/go-modernworld/modernworld/utils"
+	"github.com/feurig/go-modernworld/modernworld/utils"
 )
 
 type Arena struct {

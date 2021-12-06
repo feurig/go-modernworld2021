@@ -1,4 +1,4 @@
-module github.com/afagundes/go-modernworld
+module github.com/feurig/go-modernworld
 
 go 1.16
 
