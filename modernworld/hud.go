@@ -1,7 +1,8 @@
-package invaders
+package modernworld
 
 import (
 	"fmt"
+
 	tl "github.com/JoelOtter/termloop"
 )
 
@@ -12,7 +13,7 @@ type Hud struct {
 }
 
 func NewHud(arena *Arena, level *tl.BaseLevel) *Hud {
-	hud := Hud{Title: "Go Invaders", PressToQuit: "Press BACKSPACE to quit"}
+	hud := Hud{Title: "Go modernworld", PressToQuit: "Press BACKSPACE to quit"}
 	hud.drawTitle(arena, level)
 	hud.drawPressToQuit(arena, level)
 	hud.drawScore(arena, level)

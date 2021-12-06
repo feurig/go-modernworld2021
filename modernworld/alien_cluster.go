@@ -1,9 +1,10 @@
-package invaders
+package modernworld
 
 import (
-	tl "github.com/JoelOtter/termloop"
 	"math/rand"
 	"time"
+
+	tl "github.com/JoelOtter/termloop"
 )
 
 type AlienCluster struct {

@@ -1,9 +1,10 @@
-package invaders
+package modernworld
 
 import (
 	_ "embed"
-	tl "github.com/JoelOtter/termloop"
 	"time"
+
+	tl "github.com/JoelOtter/termloop"
 )
 
 type Hero struct {

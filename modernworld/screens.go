@@ -1,8 +1,9 @@
-package invaders
+package modernworld
 
 import (
 	_ "embed"
 	"fmt"
+
 	tl "github.com/JoelOtter/termloop"
 )
 
@@ -14,21 +15,21 @@ var (
 	gameOverScreenFile []byte
 )
 
-func ShowTitleScreen(invaders *Invaders) {
-	prepareScreen(invaders)
-	showTitle(invaders)
+func ShowTitleScreen(modernworld *modernworld) {
+	prepareScreen(modernworld)
+	showTitle(modernworld)
 
-	if checkArenaSizeNotOk(invaders) {
-		invaders.ScreenSizeNotOK = true
-		showMaximizeScreen(invaders)
+	if checkArenaSizeNotOk(modernworld) {
+		modernworld.ScreenSizeNotOK = true
+		showMaximizeScreen(modernworld)
 		return
 	}
 
-	showPressToInit(invaders, 0)
+	showPressToInit(modernworld, 0)
 }
 
-func checkArenaSizeNotOk(invaders *Invaders) bool {
-	w, h := invaders.Arena.Size()
+func checkArenaSizeNotOk(modernworld *modernworld) bool {
+	w, h := modernworld.Arena.Size()
 
 	if w < 100 || h < 37 {
 		return true
@@ -37,61 +38,61 @@ func checkArenaSizeNotOk(invaders *Invaders) bool {
 	return false
 }
 
-func ShowGameOverScreen(invaders *Invaders) {
-	prepareScreen(invaders)
-	showGameOver(invaders)
-	showScore(invaders)
-	showPressToInit(invaders, 2)
+func ShowGameOverScreen(modernworld *modernworld) {
+	prepareScreen(modernworld)
+	showGameOver(modernworld)
+	showScore(modernworld)
+	showPressToInit(modernworld, 2)
 }
 
-func prepareScreen(invaders *Invaders) {
-	invaders.Level = tl.NewBaseLevel(tl.Cell{Bg: tl.ColorBlack, Fg: tl.ColorWhite})
-	invaders.Game.Screen().SetLevel(invaders.Level)
-	invaders.Level.AddEntity(invaders)
+func prepareScreen(modernworld *modernworld) {
+	modernworld.Level = tl.NewBaseLevel(tl.Cell{Bg: tl.ColorBlack, Fg: tl.ColorWhite})
+	modernworld.Game.Screen().SetLevel(modernworld.Level)
+	modernworld.Level.AddEntity(modernworld)
 
-	invaders.initArena()
-	invaders.initHud()
+	modernworld.initArena()
+	modernworld.initHud()
 }
 
-func showTitle(invaders *Invaders) {
-	showCanvas(invaders, titleScreenFile)
+func showTitle(modernworld *modernworld) {
+	showCanvas(modernworld, titleScreenFile)
 }
 
-func showGameOver(invaders *Invaders) {
-	showCanvas(invaders, gameOverScreenFile)
+func showGameOver(modernworld *modernworld) {
+	showCanvas(modernworld, gameOverScreenFile)
 }
 
-func showCanvas(invaders *Invaders, file []byte) {
+func showCanvas(modernworld *modernworld, file []byte) {
 	canvas := CreateCanvas(file)
 
-	arenaX, arenaY := invaders.Arena.Position()
-	arenaW, arenaH := invaders.Arena.Size()
+	arenaX, arenaY := modernworld.Arena.Position()
+	arenaW, arenaH := modernworld.Arena.Size()
 
 	x := arenaX + arenaW/2 - len(canvas)/2
 	y := arenaY + arenaH/2 + -len(canvas[0]) - 1
 
-	invaders.Level.AddEntity(tl.NewEntityFromCanvas(x, y, canvas))
+	modernworld.Level.AddEntity(tl.NewEntityFromCanvas(x, y, canvas))
 }
 
-func showScore(invaders *Invaders) {
-	score := fmt.Sprintf("SCORE: %4d ", invaders.Score)
-	showCenterText(score, 0, invaders)
+func showScore(modernworld *modernworld) {
+	score := fmt.Sprintf("SCORE: %4d ", modernworld.Score)
+	showCenterText(score, 0, modernworld)
 }
 
-func showPressToInit(invaders *Invaders, topPadding int) {
-	showCenterText("Press ENTER to start", topPadding, invaders)
+func showPressToInit(modernworld *modernworld, topPadding int) {
+	showCenterText("Press ENTER to start", topPadding, modernworld)
 }
 
-func showMaximizeScreen(invaders *Invaders) {
-	showCenterText("Maximize the console and run the game again", 0, invaders)
+func showMaximizeScreen(modernworld *modernworld) {
+	showCenterText("Maximize the console and run the game again", 0, modernworld)
 }
 
-func showCenterText(text string, topPadding int, invaders *Invaders) {
-	arenaX, arenaY := invaders.Arena.Position()
-	arenaW, arenaH := invaders.Arena.Size()
+func showCenterText(text string, topPadding int, modernworld *modernworld) {
+	arenaX, arenaY := modernworld.Arena.Position()
+	arenaW, arenaH := modernworld.Arena.Size()
 
 	x := arenaX + arenaW/2 - len(text)/2
 	y := arenaY + arenaH/2 + topPadding
 
-	invaders.Level.AddEntity(tl.NewText(x, y, text, tl.ColorWhite, tl.ColorBlack))
+	modernworld.Level.AddEntity(tl.NewText(x, y, text, tl.ColorWhite, tl.ColorBlack))
 }

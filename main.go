@@ -1,7 +1,7 @@
 package main
 
-import "github.com/afagundes/go-invaders/invaders"
+import "github.com/afagundes/go-modernworld/modernworld"
 
 func main() {
-	invaders.NewGame().Start()
+	modernworld.NewGame().Start()
 }

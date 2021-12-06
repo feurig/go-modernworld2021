@@ -1,11 +1,12 @@
-package invaders
+package modernworld
 
 import (
-	tl "github.com/JoelOtter/termloop"
 	"time"
+
+	tl "github.com/JoelOtter/termloop"
 )
 
-type Invaders struct {
+type modernworld struct {
 	*tl.Entity
 	Game               *tl.Game
 	Level              *tl.BaseLevel
@@ -22,8 +23,8 @@ type Invaders struct {
 	ScreenSizeNotOK    bool
 }
 
-func NewGame() *Invaders {
-	invaders := Invaders{
+func NewGame() *modernworld {
+	modernworld := modernworld{
 		Entity:             tl.NewEntity(0, 0, 1, 1),
 		Game:               tl.NewGame(),
 		Level:              tl.NewBaseLevel(tl.Cell{Bg: tl.ColorBlack, Fg: tl.ColorWhite}),
@@ -32,135 +33,135 @@ func NewGame() *Invaders {
 		Score:              0,
 	}
 
-	invaders.Game.Screen().SetFps(60)
-	invaders.Game.SetEndKey(tl.KeyBackspace)
-	invaders.Game.Screen().SetLevel(invaders.Level)
-	invaders.Level.AddEntity(&invaders)
+	modernworld.Game.Screen().SetFps(60)
+	modernworld.Game.SetEndKey(tl.KeyBackspace)
+	modernworld.Game.Screen().SetLevel(modernworld.Level)
+	modernworld.Level.AddEntity(&modernworld)
 
-	return &invaders
+	return &modernworld
 }
 
-func (invaders *Invaders) Start() {
-	go ShowTitleScreen(invaders)
-	invaders.Game.Start()
+func (modernworld *modernworld) Start() {
+	go ShowTitleScreen(modernworld)
+	modernworld.Game.Start()
 }
 
-func (invaders *Invaders) Tick(event tl.Event) {
-	if invaders.Started == false && invaders.ScreenSizeNotOK == false && event.Type == tl.EventKey && event.Key == tl.KeyEnter {
-		go invaders.initializeGame()
+func (modernworld *modernworld) Tick(event tl.Event) {
+	if modernworld.Started == false && modernworld.ScreenSizeNotOK == false && event.Type == tl.EventKey && event.Key == tl.KeyEnter {
+		go modernworld.initializeGame()
 	}
 }
 
-func (invaders *Invaders) initializeGame() {
-	prepareScreen(invaders)
+func (modernworld *modernworld) initializeGame() {
+	prepareScreen(modernworld)
 
-	invaders.Started = true
+	modernworld.Started = true
 
-	invaders.initHero()
-	invaders.initAliens()
-	invaders.initGameOverZone()
-	invaders.gameLoop()
+	modernworld.initHero()
+	modernworld.initAliens()
+	modernworld.initGameOverZone()
+	modernworld.gameLoop()
 }
 
-func (invaders *Invaders) initArena() {
-	screenWidth, screenHeight := invaders.getScreenSize()
-	invaders.Arena = newArena(screenWidth, screenHeight)
-	invaders.Level.AddEntity(invaders.Arena)
+func (modernworld *modernworld) initArena() {
+	screenWidth, screenHeight := modernworld.getScreenSize()
+	modernworld.Arena = newArena(screenWidth, screenHeight)
+	modernworld.Level.AddEntity(modernworld.Arena)
 }
 
-func (invaders *Invaders) initHud() {
-	invaders.Hud = NewHud(invaders.Arena, invaders.Level)
+func (modernworld *modernworld) initHud() {
+	modernworld.Hud = NewHud(modernworld.Arena, modernworld.Level)
 }
 
-func (invaders *Invaders) getScreenSize() (int, int) {
-	screenWidth, screenHeight := invaders.Game.Screen().Size()
+func (modernworld *modernworld) getScreenSize() (int, int) {
+	screenWidth, screenHeight := modernworld.Game.Screen().Size()
 
 	for screenWidth == 0 && screenHeight == 0 {
 		time.Sleep(100 * time.Millisecond)
-		screenWidth, screenHeight = invaders.Game.Screen().Size()
+		screenWidth, screenHeight = modernworld.Game.Screen().Size()
 	}
 
 	return screenWidth, screenHeight
 }
 
-func (invaders *Invaders) initHero() {
-	invaders.Hero = NewHero(invaders.Arena)
-	invaders.Level.AddEntity(invaders.Hero)
+func (modernworld *modernworld) initHero() {
+	modernworld.Hero = NewHero(modernworld.Arena)
+	modernworld.Level.AddEntity(modernworld.Hero)
 }
 
-func (invaders *Invaders) initAliens() {
-	invaders.AlienCluster = NewAlienCluster()
-	SetPositionAndRenderAliens(invaders.AlienCluster.Aliens, invaders.Level, invaders.Arena)
+func (modernworld *modernworld) initAliens() {
+	modernworld.AlienCluster = NewAlienCluster()
+	SetPositionAndRenderAliens(modernworld.AlienCluster.Aliens, modernworld.Level, modernworld.Arena)
 }
 
-func (invaders *Invaders) initGameOverZone() {
-	invaders.GameOverZone = CreateGameOverZone(invaders.Arena, invaders.Hero)
-	invaders.Level.AddEntity(invaders.GameOverZone)
+func (modernworld *modernworld) initGameOverZone() {
+	modernworld.GameOverZone = CreateGameOverZone(modernworld.Arena, modernworld.Hero)
+	modernworld.Level.AddEntity(modernworld.GameOverZone)
 }
 
-func (invaders *Invaders) gameLoop() {
+func (modernworld *modernworld) gameLoop() {
 	for {
-		if invaders.Hero.IsDead() || invaders.AlienCluster.IsAllAliensDead() {
-			invaders.Hero.animateHeroEndGame(invaders.Level)
-			invaders.Started = false
+		if modernworld.Hero.IsDead() || modernworld.AlienCluster.IsAllAliensDead() {
+			modernworld.Hero.animateHeroEndGame(modernworld.Level)
+			modernworld.Started = false
 			break
 		}
 
-		invaders.updateLaserPositions()
-		invaders.RemoveDeadAliensAndIncrementScore()
-		invaders.updateAlienClusterPosition()
-		invaders.updateScore()
-		invaders.verifyGameOverZone()
+		modernworld.updateLaserPositions()
+		modernworld.RemoveDeadAliensAndIncrementScore()
+		modernworld.updateAlienClusterPosition()
+		modernworld.updateScore()
+		modernworld.verifyGameOverZone()
 
-		time.Sleep(invaders.RefreshSpeed * time.Millisecond)
+		time.Sleep(modernworld.RefreshSpeed * time.Millisecond)
 	}
 
-	if invaders.Hero.IsDead() {
-		ShowGameOverScreen(invaders)
+	if modernworld.Hero.IsDead() {
+		ShowGameOverScreen(modernworld)
 	}
 
-	if invaders.AlienCluster.IsAllAliensDead() {
-		invaders.initializeGame()
-	}
-}
-
-func (invaders *Invaders) updateScore() {
-	invaders.Hud.UpdateScore(invaders.Score)
-}
-
-func (invaders *Invaders) updateAlienClusterPosition() {
-	invaders.AlienCluster.UpdateAliensPositions(invaders.Game.Screen().TimeDelta(), invaders.Arena)
-	invaders.AlienCluster.Shoot()
-}
-
-func (invaders *Invaders) RemoveDeadAliensAndIncrementScore() {
-	points := invaders.AlienCluster.RemoveDeadAliensAndGetPoints(invaders.Level)
-	invaders.addScore(points)
-}
-
-func (invaders *Invaders) updateLaserPositions() {
-	invaders.updateHeroLasers()
-	invaders.updateAlienLasers()
-	invaders.removeLasers()
-}
-
-func (invaders *Invaders) updateHeroLasers() {
-	invaders.updateLasers(invaders.Hero.Lasers)
-}
-
-func (invaders *Invaders) updateAlienLasers() {
-	invaders.TimeDelta += invaders.Game.Screen().TimeDelta()
-
-	if invaders.TimeDelta >= invaders.AlienLaserVelocity {
-		invaders.TimeDelta = 0
-		invaders.updateLasers(invaders.AlienCluster.Lasers)
+	if modernworld.AlienCluster.IsAllAliensDead() {
+		modernworld.initializeGame()
 	}
 }
 
-func (invaders *Invaders) updateLasers(lasers []*Laser) {
+func (modernworld *modernworld) updateScore() {
+	modernworld.Hud.UpdateScore(modernworld.Score)
+}
+
+func (modernworld *modernworld) updateAlienClusterPosition() {
+	modernworld.AlienCluster.UpdateAliensPositions(modernworld.Game.Screen().TimeDelta(), modernworld.Arena)
+	modernworld.AlienCluster.Shoot()
+}
+
+func (modernworld *modernworld) RemoveDeadAliensAndIncrementScore() {
+	points := modernworld.AlienCluster.RemoveDeadAliensAndGetPoints(modernworld.Level)
+	modernworld.addScore(points)
+}
+
+func (modernworld *modernworld) updateLaserPositions() {
+	modernworld.updateHeroLasers()
+	modernworld.updateAlienLasers()
+	modernworld.removeLasers()
+}
+
+func (modernworld *modernworld) updateHeroLasers() {
+	modernworld.updateLasers(modernworld.Hero.Lasers)
+}
+
+func (modernworld *modernworld) updateAlienLasers() {
+	modernworld.TimeDelta += modernworld.Game.Screen().TimeDelta()
+
+	if modernworld.TimeDelta >= modernworld.AlienLaserVelocity {
+		modernworld.TimeDelta = 0
+		modernworld.updateLasers(modernworld.AlienCluster.Lasers)
+	}
+}
+
+func (modernworld *modernworld) updateLasers(lasers []*Laser) {
 	for _, laser := range lasers {
 		if laser.IsNew {
-			invaders.renderNewLaser(laser)
+			modernworld.renderNewLaser(laser)
 			continue
 		}
 
@@ -169,32 +170,32 @@ func (invaders *Invaders) updateLasers(lasers []*Laser) {
 	}
 }
 
-func (invaders *Invaders) renderNewLaser(laser *Laser) {
+func (modernworld *modernworld) renderNewLaser(laser *Laser) {
 	laser.IsNew = false
-	invaders.Level.AddEntity(laser)
+	modernworld.Level.AddEntity(laser)
 }
 
-func (invaders *Invaders) removeLasers() {
-	_, arenaY := invaders.Arena.Position()
-	_, arenaH := invaders.Arena.Size()
+func (modernworld *modernworld) removeLasers() {
+	_, arenaY := modernworld.Arena.Position()
+	_, arenaH := modernworld.Arena.Size()
 
 	upperLimit := arenaY
 	bottomLimit := arenaY + arenaH - 1
 
-	invaders.Hero.Lasers = invaders.removeLaserOf(invaders.Hero.Lasers, upperLimit)
-	invaders.AlienCluster.Lasers = invaders.removeLaserOf(invaders.AlienCluster.Lasers, bottomLimit)
+	modernworld.Hero.Lasers = modernworld.removeLaserOf(modernworld.Hero.Lasers, upperLimit)
+	modernworld.AlienCluster.Lasers = modernworld.removeLaserOf(modernworld.AlienCluster.Lasers, bottomLimit)
 }
 
-func (invaders *Invaders) removeLaserOf(lasers []*Laser, arenaLimit int) []*Laser {
+func (modernworld *modernworld) removeLaserOf(lasers []*Laser, arenaLimit int) []*Laser {
 	for index, laser := range lasers {
 		_, y := laser.Position()
 		isEndOfArena := y == arenaLimit
 
 		if isEndOfArena || laser.HasHit {
-			invaders.Level.RemoveEntity(laser)
+			modernworld.Level.RemoveEntity(laser)
 
 			if laser.HitAlienLaser {
-				invaders.addScore(laser.Points)
+				modernworld.addScore(laser.Points)
 			}
 
 			if index < len(lasers) {
@@ -206,12 +207,12 @@ func (invaders *Invaders) removeLaserOf(lasers []*Laser, arenaLimit int) []*Lase
 	return lasers
 }
 
-func (invaders *Invaders) addScore(points int) {
-	invaders.Score += points
+func (modernworld *modernworld) addScore(points int) {
+	modernworld.Score += points
 }
 
-func (invaders *Invaders) verifyGameOverZone() {
-	if invaders.GameOverZone.EnteredZone {
-		invaders.Hero.IsAlive = false
+func (modernworld *modernworld) verifyGameOverZone() {
+	if modernworld.GameOverZone.EnteredZone {
+		modernworld.Hero.IsAlive = false
 	}
 }

@@ -1,7 +1,8 @@
-package invaders
+package modernworld
 
 import (
 	_ "embed"
+
 	tl "github.com/JoelOtter/termloop"
 )
 
